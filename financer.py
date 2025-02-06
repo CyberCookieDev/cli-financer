@@ -1,13 +1,4 @@
 
-"""
-Features people wnat:
- - Watchlists (stored in .json files)
-- Real time price fetched.
-- Managing a "portfolio"
-- Stock info
-- Latest news
-"""
-
 import yfinance as yf
 import os
 import colorama
@@ -159,30 +150,27 @@ def search(marker):
     vital_info(marker)
 
 def display_watchlists():
-    print("Available watchlists")
+    print(Fore.CYAN + "Available watchlists")
     for x in os.listdir('watchlists'):
-        print(x)
+        print(Fore.GREEN + f"- {x}")
 
-# Setup argparse
+
 parser = argparse.ArgumentParser(description="Stock CLI App")
 
-
-parser.add_argument("ticker", nargs="?", help="Stock ticker symbol (e.g., AAPL, TSLA)")
-parser.add_argument("--news", action="store_true", help="Show latest stock news")
+parser.add_argument("--news", metavar="TICKER", help="Show latest stock news for TICKER")
 parser.add_argument("--watchlist", metavar="NAME", help="Create a new watchlist")
 parser.add_argument("--add", nargs=3, metavar=("TICKER", "NUMBER", "PRICE"), help="Add stock to portfolio")
 parser.add_argument("--portfolio", action="store_true", help="Show portfolio performance")
 parser.add_argument("--search", metavar="TICKER", help="Search for a stock in portfolio")
-parser.add_argument("--fetch", action="store_true", help="Fetch latest stock price")
-parser.add_argument("--remove", nargs=2, metavar=("WATCHLIST", "MARKER"), help="Remove stock from watchlist.")
-parser.add_argument("--display", metavar="WATCHLIST", help="Show watchlist.")
-parser.add_argument("--list", action="store_true", help="List watchlists.")
-parser.add_argument("--addto", nargs=2, metavar=("WATCHLIST", "MARKER"), help="Add stock to certain watchlist.")
+parser.add_argument("--fetch", action="store_true", help="Fetch latest stock price for TICKER")
+parser.add_argument("--remove", nargs=2, metavar=("WATCHLIST", "MARKER"), help="Remove stock from watchlist")
+parser.add_argument("--display", metavar="WATCHLIST", help="Show watchlist")
+parser.add_argument("--list", action="store_true", help="List all watchlists")
+parser.add_argument("--addto", nargs=2, metavar=("WATCHLIST", "MARKER"), help="Add stock to specific watchlist")
 
-# Parse arguments
+
 args = parser.parse_args()
 
-# Execute functions based on arguments
 if args.watchlist:
     add_watchlist(args.watchlist)
 
@@ -195,25 +183,20 @@ if args.portfolio:
 if args.search:
     search(args.search)
 
-if args.ticker:
-    vital_info(args.ticker)
+if args.news:
+    get_stock_news(args.news)
 
-if args.news and args.ticker:
-    get_stock_news(args.ticker)
-
-if args.fetch and args.ticker:
-    fetch_latest(args.ticker)
+if args.fetch:
+    fetch_latest(args.fetch)
 
 if args.remove:
-    remove_from_watchlist(args.add[0], args.add[1])
+    remove_from_watchlist(args.remove[0], args.remove[1])
 
 if args.addto:
     add_to_watchlist(args.addto[0], args.addto[1])
 
 if args.display:
-    display_watchlist(args.display[0])
+    display_watchlist(args.display)
 
-
-
-
-
+if args.list:
+    display_watchlists()
