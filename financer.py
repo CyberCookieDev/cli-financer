@@ -18,9 +18,10 @@ def add_watchlist(name):
 def add_to_portfolio(marker, number, price):
     try:
         with open("portfolio.json", "r") as file:
-            data = json.load(file)  # Load existing portfolio
+            data = json.load(file) 
+
     except (FileNotFoundError, json.JSONDecodeError):
-        data = {}  # If file doesn't exist, initialize empty dict
+        data = {}
 
     number = int(number)
     price = int(price)
@@ -77,15 +78,16 @@ def get_stock_news(ticker_symbol):
 
         print(f"\n {article['content']['title']}")
 
+# Calculate change of price since the last day.
 
 def get_stock_change(ticker):
     stock = yf.Ticker(ticker)
-    data = stock.history(period="2d")  # Get last two days' data
+    data = stock.history(period="2d")
     if len(data) < 2:
         return "Not enough data"
 
-    current_price = data['Close'].iloc[-1]  # Latest close price
-    prev_close = data['Close'].iloc[-2]  # Previous close price
+    current_price = data['Close'].iloc[-1]
+    prev_close = data['Close'].iloc[-2] 
     change = current_price - prev_close
     percent_change = (change / prev_close) * 100
 
